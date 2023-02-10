@@ -48,4 +48,3 @@ def getMusic(sentence):
     predicted = model(np.array(encode(sentence)))
     index = np.argmax(predicted[0])
     return musics[index]
-predict('疲れた')
