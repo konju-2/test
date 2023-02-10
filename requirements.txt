@@ -5,3 +5,4 @@ ipadic
 torch
 gunicorn
 keras
+tensorflow
