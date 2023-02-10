@@ -4,4 +4,4 @@ fugashi
 ipadic
 torch
 gunicorn
-tensorflow-cpu
+keras
