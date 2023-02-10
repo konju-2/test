@@ -13,8 +13,6 @@ bertModel = BertModel.from_pretrained(MODEL_NAME)
 def encode(text):
     encoding = tokenizer(
         text,
-        padding = 'max_length',
-        truncation = True,
         return_tensors = 'pt'
         )
     attention_mask = encoding['attention_mask']
@@ -44,7 +42,6 @@ from tensorflow.keras.models import load_model
 
 model = load_model('model.h5')
 def getMusic(sentence):
-    print(encode(sentence).shape)
     predicted = model(np.array(encode(sentence)))
     index = np.argmax(predicted[0])
     return musics[index]
