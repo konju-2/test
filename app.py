@@ -8,8 +8,10 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def route():
     print(request.form['text'])
-    music_name = word2music.getMusic(request.form['text'])
-    return music_name
+    if request.method == 'POST':
+        music_name = word2music.getMusic(request.form['text'])
+        return music_name
+    return 'OK'
 
 
 @app.after_request
