@@ -4,5 +4,4 @@ fugashi
 ipadic
 torch
 gunicorn
-keras
 tensorflow
