@@ -1,0 +1,21 @@
+{
+  "cls_token": "[CLS]",
+  "do_lower_case": true,
+  "do_subword_tokenize": true,
+  "do_word_tokenize": true,
+  "jumanpp_kwargs": null,
+  "mask_token": "[MASK]",
+  "max_len": 512,
+  "mecab_kwargs": null,
+  "model_max_length": 512,
+  "name_or_path": "sonoisa/sentence-bert-base-ja-mean-tokens",
+  "never_split": null,
+  "pad_token": "[PAD]",
+  "sep_token": "[SEP]",
+  "special_tokens_map_file": "C:\\Users\\funah/.cache\\huggingface\\hub\\models--sonoisa--sentence-bert-base-ja-mean-tokens\\snapshots\\c5db458007569cea1374d4b5766193832c3fc285\\special_tokens_map.json",
+  "subword_tokenizer_type": "wordpiece",
+  "sudachi_kwargs": null,
+  "tokenizer_class": "BertJapaneseTokenizer",
+  "unk_token": "[UNK]",
+  "word_tokenizer_type": "mecab"
+}
