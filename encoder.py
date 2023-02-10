@@ -4,7 +4,7 @@ from transformers import BertJapaneseTokenizer, BertModel
 import torch
 
 # BERTの日本語モデル
-MODEL_NAME = 'izumi-lab/bert-small-japanese'
+MODEL_NAME = 'model'
 
 #トークナイザとモデルのロード
 tokenizer = BertJapaneseTokenizer.from_pretrained(MODEL_NAME)
@@ -22,7 +22,7 @@ def encode(text):
         output = bertModel(**encoding)
         last_hidden_state = output.last_hidden_state
         averaged_hidden_state =(last_hidden_state*attention_mask.unsqueeze(-1)).sum(1)/attention_mask.sum(1,keepdim=True) 
-        
+    
     sentence_vectors = []
     #文章ベクトルとラベルを追加
     sentence_vectors.append(averaged_hidden_state[0].cpu().numpy())
