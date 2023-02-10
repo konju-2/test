@@ -43,7 +43,7 @@ musics = [
 from tensorflow.keras.models import load_model
 
 model = load_model('model.h5')
-def predict(sentence):
+def getMusic(sentence):
     print(encode(sentence).shape)
     predicted = model(np.array(encode(sentence)))
     index = np.argmax(predicted[0])
