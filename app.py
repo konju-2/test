@@ -1,6 +1,6 @@
 from flask import Flask, request
 import platform
-import word2music
+import encoder
 
 app = Flask(__name__)
 
