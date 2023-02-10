@@ -8,6 +8,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def route():
     if request.method == 'POST':
+        print(request.form['text']
         music_name = encoder.getMusic(request.form['text'])
         return music_name
     return 'OK'
