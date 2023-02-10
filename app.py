@@ -1,14 +1,3 @@
-import os
-import requests
-
-if not os.path.exists('./bertModel/pytorch_model.bin'):
-    print('モデルをダウンロードします。')
-    res = requests.get('https://www.dropbox.com/s/h4r1hiwtyg8n4wg/pytorch_model.bin?dl=1')
-    with open('./bertModel/pytorch_model.bin', 'wb') as saveFile:
-        saveFile.write(res.content)
-    print('モデルを保存しました')
-    
-    
 from flask import Flask, request
 import platform
 import word2music
