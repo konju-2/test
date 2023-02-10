@@ -1,40 +1,38 @@
+import numpy as np
 from transformers import BertJapaneseTokenizer, BertModel
+
 import torch
 
-class SentenceBertJapanese:
-    def __init__(self, model_name_or_path, device=None):
-        self.tokenizer = BertJapaneseTokenizer.from_pretrained(model_name_or_path)
-        self.model = BertModel.from_pretrained(model_name_or_path)
-        self.model.eval()
+# BERTの日本語モデル
+MODEL_NAME = 'izumi-lab/bert-small-japanese'
 
+#トークナイザとモデルのロード
+tokenizer = BertJapaneseTokenizer.from_pretrained(MODEL_NAME)
+bertModel = BertModel.from_pretrained(MODEL_NAME)
 
-    def _mean_pooling(self, model_output, attention_mask):
-        token_embeddings = model_output[0]
-        input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
-        return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
+def encode(text):
+    encoding = tokenizer(
+        text,
+        padding = 'max_length',
+        truncation = True,
+        return_tensors = 'pt'
+        )
+    attention_mask = encoding['attention_mask']
 
-    @torch.no_grad()
-    def encode(self, sentences, batch_size=8):
-        all_embeddings = []
-        iterator = range(0, len(sentences), batch_size)
-        for batch_idx in iterator:
-            batch = sentences[batch_idx:batch_idx + batch_size]
+    #文章ベクトルを計算
+    with torch.no_grad():
+        output = bertModel(**encoding)
+        last_hidden_state = output.last_hidden_state
+        averaged_hidden_state =(last_hidden_state*attention_mask.unsqueeze(-1)).sum(1)/attention_mask.sum(1,keepdim=True) 
+        
+    sentence_vectors = []
+    #文章ベクトルとラベルを追加
+    sentence_vectors.append(averaged_hidden_state[0].cpu().numpy())
 
-            encoded_input = self.tokenizer.batch_encode_plus(batch, padding="longest", 
-                                           truncation=True, return_tensors="pt")
-            model_output = self.model(**encoded_input)
-            sentence_embeddings = self._mean_pooling(model_output, encoded_input["attention_mask"]).to('cpu')
+    #ベクトルとラベルをnumpy.ndarrayにする
+    sentence_vectors = np.vstack(sentence_vectors)
+    return sentence_vectors
 
-            all_embeddings.extend(sentence_embeddings)
-
-        # return torch.stack(all_embeddings).numpy()
-        return torch.stack(all_embeddings)
-
-
-bertModel = SentenceBertJapanese("bertModel")
-
-from keras.models import load_model
-import numpy as np
 
 musics = [
 'おとぼけダンス', '大混乱', 'Funny_Funny', '全力で逃げる時のBGM', 'トッカータとフーガ〜ギャグVer〜', 'シラけムードは少し気まずい',
@@ -42,9 +40,12 @@ musics = [
 'Happy_birthday', 'はっぴいばあすでいつーゆー', 'yonhonnorecorder', 'happytime', '夏休みの探検', 'Recollections', 'パステルハウス'
 ]
 
-model = load_model('model.h5')
+from tensorflow.keras.models import load_model
 
-def getMusic(sentence):
-    predicted = model(np.array(bertModel.encode([sentence], batch_size=8)))
+model = load_model('model.h5')
+def predict(sentence):
+    print(encode(sentence).shape)
+    predicted = model(np.array(encode(sentence)))
     index = np.argmax(predicted[0])
     return musics[index]
+predict('疲れた')
